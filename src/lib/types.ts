@@ -2,9 +2,38 @@
 // ExamFlow AI — Core Type Definitions
 // ============================================================
 
+// ---- Confidence Levels ----
+
+export type ConfidenceLevel = 'not_started' | 'basic' | 'good' | 'strong';
+
+export const CONFIDENCE_WEIGHTS: Record<ConfidenceLevel, number> = {
+  not_started: 4,
+  basic: 3,
+  good: 2,
+  strong: 1,
+};
+
+export const CONFIDENCE_LABELS: Record<ConfidenceLevel, string> = {
+  not_started: 'Not Started',
+  basic: 'Basic Understanding',
+  good: 'Good Understanding',
+  strong: 'Strong Understanding',
+};
+
+export const CONFIDENCE_COLORS: Record<ConfidenceLevel, string> = {
+  not_started: '#ef4444',
+  basic: '#f97316',
+  good: '#3b82f6',
+  strong: '#22c55e',
+};
+
+// ---- Data Models ----
+
 export interface Module {
   id: string;
   name: string;
+  confidence: ConfidenceLevel;
+  /** Derived convenience — true when confidence === 'strong' */
   completed: boolean;
 }
 
@@ -13,20 +42,22 @@ export interface Subject {
   name: string;
   shortName: string;
   modules: Module[];
-  color: string;       // HSL color for calendar events
-  bgColor: string;     // Background color variant
+  color: string;
+  bgColor: string;
 }
 
 export interface ExamEntry {
   subjectCode: string;
   subjectName: string;
-  date: string; // ISO date string YYYY-MM-DD
+  date: string; // YYYY-MM-DD
 }
 
 export interface DifficultyRating {
   subjectCode: string;
   rating: 1 | 2 | 3 | 4 | 5;
 }
+
+// ---- Study Blocks ----
 
 export type StudyBlockType = 'study' | 'revision' | 'mock';
 export type PriorityLevel = 'urgent' | 'medium' | 'low';
@@ -35,18 +66,78 @@ export interface StudyBlock {
   id: string;
   subjectCode: string;
   subjectName: string;
+  moduleId: string;
   moduleName: string;
-  date: string;        // ISO date string YYYY-MM-DD
-  startTime: string;   // HH:mm format
-  endTime: string;     // HH:mm format
+  date: string;        // YYYY-MM-DD
+  startTime: string;   // HH:mm
+  endTime: string;     // HH:mm
+  hours: number;
   type: StudyBlockType;
   priority: PriorityLevel;
   color: string;
+  blockCompleted: boolean;
 }
+
+// ---- Module Priority ----
+
+export interface ModulePriority {
+  subjectCode: string;
+  moduleId: string;
+  moduleName: string;
+  difficultyWeight: number;
+  knowledgeGap: number;
+  examUrgency: number;
+  priorityScore: number;
+  confidence: ConfidenceLevel;
+}
+
+// ---- Subject Priority ----
+
+export interface SubjectPriority {
+  subjectCode: string;
+  remainingModules: number;
+  totalModules: number;
+  difficultyWeight: number;
+  daysRemaining: number;
+  priorityScore: number;
+  completionPercent: number;
+  avgKnowledgeGap: number;
+}
+
+// ---- Risk & Readiness ----
+
+export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
+
+export interface SubjectRisk {
+  subjectCode: string;
+  subjectName: string;
+  riskLevel: RiskLevel;
+  riskScore: number;       // 0–100
+  remainingModules: number;
+  daysRemaining: number;
+  avgConfidence: number;
+  color: string;
+}
+
+export interface SubjectReadiness {
+  subjectCode: string;
+  subjectName: string;
+  readinessPercent: number; // 0–100
+  strongModules: number;
+  goodModules: number;
+  basicModules: number;
+  notStartedModules: number;
+  totalModules: number;
+  color: string;
+}
+
+// ---- Study Plan ----
 
 export interface StudyPlan {
   blocks: StudyBlock[];
   insights: AIInsight[];
+  riskAssessments: SubjectRisk[];
+  readinessScores: SubjectReadiness[];
   generatedAt: string;
 }
 
@@ -57,15 +148,7 @@ export interface AIInsight {
   subjectCode?: string;
 }
 
-export interface SubjectPriority {
-  subjectCode: string;
-  remainingModules: number;
-  totalModules: number;
-  difficultyWeight: number;
-  daysRemaining: number;
-  priorityScore: number;
-  completionPercent: number;
-}
+// ---- Day Schedule ----
 
 export interface DaySchedule {
   date: string;
@@ -75,46 +158,40 @@ export interface DaySchedule {
   examSubject?: string;
 }
 
-export interface ExamStoreState {
-  // Step 1 & 2: Exam timetable
-  exams: ExamEntry[];
-
-  // Step 3: Student inputs
-  currentDate: string;
-  dailyStudyHours: number;
-
-  // Step 4: Syllabus completion
-  subjects: Subject[];
-
-  // Step 5: Difficulty ratings
-  difficultyRatings: DifficultyRating[];
-
-  // Generated plan
-  studyPlan: StudyPlan | null;
-
-  // App state
-  onboardingComplete: boolean;
-  apiKeys: {
-    groq: string;
-    gemini: string;
-  };
-}
+// ---- Calendar Event ----
 
 export interface CalendarEvent {
   id: string;
   title: string;
-  start: string;        // ISO datetime
-  end: string;           // ISO datetime
+  start: string;
+  end: string;
   backgroundColor: string;
   borderColor: string;
   textColor: string;
   extendedProps: {
     subjectCode: string;
+    moduleId: string;
     moduleName: string;
     type: StudyBlockType;
     priority: PriorityLevel;
+    hours: number;
+    blockCompleted: boolean;
   };
 }
+
+// ---- App State ----
+
+export interface ExamStoreState {
+  exams: ExamEntry[];
+  currentDate: string;
+  dailyStudyHours: number;
+  subjects: Subject[];
+  difficultyRatings: DifficultyRating[];
+  studyPlan: StudyPlan | null;
+  onboardingComplete: boolean;
+}
+
+// ---- Constants ----
 
 export const DIFFICULTY_LABELS: Record<number, string> = {
   1: 'Very Easy',
@@ -131,7 +208,21 @@ export const PRIORITY_COLORS: Record<PriorityLevel, string> = {
 };
 
 export const BLOCK_TYPE_COLORS: Record<StudyBlockType, string> = {
-  study: '',       // Uses subject color
+  study: '',
   revision: '#3b82f6',
   mock: '#a855f7',
+};
+
+export const RISK_COLORS: Record<RiskLevel, string> = {
+  low: '#22c55e',
+  medium: '#f97316',
+  high: '#ef4444',
+  critical: '#dc2626',
+};
+
+export const RISK_LABELS: Record<RiskLevel, string> = {
+  low: 'Low Risk',
+  medium: 'Medium Risk',
+  high: 'High Risk',
+  critical: 'Critical',
 };

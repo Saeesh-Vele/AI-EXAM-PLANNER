@@ -24,7 +24,7 @@ export function daysBetween(dateA: string | Date, dateB: string | Date): number 
  * Format a date string for display.
  */
 export function formatDate(dateStr: string): string {
-  const d = new Date(dateStr);
+  const d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('en-IN', {
     weekday: 'short',
     day: 'numeric',
@@ -37,7 +37,7 @@ export function formatDate(dateStr: string): string {
  * Format a date as "DD MMM" e.g. "10 Jun"
  */
 export function formatDateShort(dateStr: string): string {
-  const d = new Date(dateStr);
+  const d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'short',
@@ -55,7 +55,7 @@ export function todayISO(): string {
  * Add days to a date string and return YYYY-MM-DD.
  */
 export function addDays(dateStr: string, days: number): string {
-  const d = new Date(dateStr);
+  const d = new Date(dateStr + 'T00:00:00');
   d.setDate(d.getDate() + days);
   return d.toISOString().split('T')[0];
 }
@@ -104,4 +104,14 @@ export function clamp(value: number, min: number, max: number): number {
 export function safePercent(value: number, total: number): number {
   if (total === 0) return 0;
   return Math.round((value / total) * 100);
+}
+
+/**
+ * Format time string "HH:mm" to "h:mm AM/PM"
+ */
+export function formatTime12h(time: string): string {
+  const [h, m] = time.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hour12 = h % 12 || 12;
+  return `${hour12}:${m.toString().padStart(2, '0')} ${ampm}`;
 }

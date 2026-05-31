@@ -3,7 +3,11 @@
 // Mumbai University Computer Engineering — Semester 6
 // ============================================================
 
-import { Subject } from '../types';
+import { Subject, Module, ConfidenceLevel } from '../types';
+
+function mod(id: string, name: string): Module {
+  return { id, name, confidence: 'not_started' as ConfidenceLevel, completed: false };
+}
 
 export const SEMESTER_6_SUBJECTS: Subject[] = [
   {
@@ -13,12 +17,12 @@ export const SEMESTER_6_SUBJECTS: Subject[] = [
     color: 'hsl(350, 80%, 55%)',
     bgColor: 'hsla(350, 80%, 55%, 0.15)',
     modules: [
-      { id: 'spcc-1', name: 'Introduction to System Software', completed: false },
-      { id: 'spcc-2', name: 'Assemblers', completed: false },
-      { id: 'spcc-3', name: 'Macros and Macro Processor', completed: false },
-      { id: 'spcc-4', name: 'Loaders and Linkers', completed: false },
-      { id: 'spcc-5', name: 'Compiler Analysis Phase', completed: false },
-      { id: 'spcc-6', name: 'Compiler Synthesis Phase', completed: false },
+      mod('spcc-1', 'Introduction to System Software'),
+      mod('spcc-2', 'Assemblers'),
+      mod('spcc-3', 'Macros and Macro Processor'),
+      mod('spcc-4', 'Loaders and Linkers'),
+      mod('spcc-5', 'Compiler Analysis Phase'),
+      mod('spcc-6', 'Compiler Synthesis Phase'),
     ],
   },
   {
@@ -28,12 +32,12 @@ export const SEMESTER_6_SUBJECTS: Subject[] = [
     color: 'hsl(200, 80%, 55%)',
     bgColor: 'hsla(200, 80%, 55%, 0.15)',
     modules: [
-      { id: 'css-1', name: 'Number Theory and Basic Cryptography', completed: false },
-      { id: 'css-2', name: 'Symmetric and Asymmetric Cryptography', completed: false },
-      { id: 'css-3', name: 'Cryptographic Hash Functions', completed: false },
-      { id: 'css-4', name: 'Authentication Protocols', completed: false },
-      { id: 'css-5', name: 'Network Security', completed: false },
-      { id: 'css-6', name: 'System Security', completed: false },
+      mod('css-1', 'Number Theory and Basic Cryptography'),
+      mod('css-2', 'Symmetric and Asymmetric Cryptography'),
+      mod('css-3', 'Cryptographic Hash Functions'),
+      mod('css-4', 'Authentication Protocols'),
+      mod('css-5', 'Network Security'),
+      mod('css-6', 'System Security'),
     ],
   },
   {
@@ -43,12 +47,12 @@ export const SEMESTER_6_SUBJECTS: Subject[] = [
     color: 'hsl(142, 70%, 45%)',
     bgColor: 'hsla(142, 70%, 45%, 0.15)',
     modules: [
-      { id: 'mc-1', name: 'Introduction to Mobile Computing', completed: false },
-      { id: 'mc-2', name: 'GSM Mobile Services', completed: false },
-      { id: 'mc-3', name: 'Mobile Networking', completed: false },
-      { id: 'mc-4', name: 'Wireless LAN', completed: false },
-      { id: 'mc-5', name: 'Mobility Management', completed: false },
-      { id: 'mc-6', name: 'LTE and 5G', completed: false },
+      mod('mc-1', 'Introduction to Mobile Computing'),
+      mod('mc-2', 'GSM Mobile Services'),
+      mod('mc-3', 'Mobile Networking'),
+      mod('mc-4', 'Wireless LAN'),
+      mod('mc-5', 'Mobility Management'),
+      mod('mc-6', 'LTE and 5G'),
     ],
   },
   {
@@ -58,12 +62,12 @@ export const SEMESTER_6_SUBJECTS: Subject[] = [
     color: 'hsl(271, 80%, 60%)',
     bgColor: 'hsla(271, 80%, 60%, 0.15)',
     modules: [
-      { id: 'ai-1', name: 'Introduction to Artificial Intelligence', completed: false },
-      { id: 'ai-2', name: 'Intelligent Agents', completed: false },
-      { id: 'ai-3', name: 'Problem Solving', completed: false },
-      { id: 'ai-4', name: 'Knowledge and Reasoning', completed: false },
-      { id: 'ai-5', name: 'Planning and Learning', completed: false },
-      { id: 'ai-6', name: 'AI Applications', completed: false },
+      mod('ai-1', 'Introduction to Artificial Intelligence'),
+      mod('ai-2', 'Intelligent Agents'),
+      mod('ai-3', 'Problem Solving'),
+      mod('ai-4', 'Knowledge and Reasoning'),
+      mod('ai-5', 'Planning and Learning'),
+      mod('ai-6', 'AI Applications'),
     ],
   },
   {
@@ -73,12 +77,12 @@ export const SEMESTER_6_SUBJECTS: Subject[] = [
     color: 'hsl(38, 90%, 55%)',
     bgColor: 'hsla(38, 90%, 55%, 0.15)',
     modules: [
-      { id: 'qa-1', name: 'Introduction to Statistics', completed: false },
-      { id: 'qa-2', name: 'Data Collection and Sampling', completed: false },
-      { id: 'qa-3', name: 'Regression', completed: false },
-      { id: 'qa-4', name: 'Multiple Linear Regression', completed: false },
-      { id: 'qa-5', name: 'Statistical Inference', completed: false },
-      { id: 'qa-6', name: 'Hypothesis Testing', completed: false },
+      mod('qa-1', 'Introduction to Statistics'),
+      mod('qa-2', 'Data Collection and Sampling'),
+      mod('qa-3', 'Regression'),
+      mod('qa-4', 'Multiple Linear Regression'),
+      mod('qa-5', 'Statistical Inference'),
+      mod('qa-6', 'Hypothesis Testing'),
     ],
   },
 ];
