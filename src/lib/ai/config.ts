@@ -10,7 +10,6 @@
 export function getAIConfig() {
   return {
     groqApiKey: process.env.GROQ_API_KEY ?? '',
-    geminiApiKey: process.env.GEMINI_API_KEY ?? '',
   };
 }
 
@@ -25,10 +24,6 @@ export function validateAIConfig(): string[] {
     missing.push('GROQ_API_KEY');
   }
 
-  if (!process.env.GEMINI_API_KEY) {
-    missing.push('GEMINI_API_KEY');
-  }
-
   return missing;
 }
 
@@ -37,8 +32,4 @@ export function validateAIConfig(): string[] {
  */
 export function isGroqConfigured(): boolean {
   return Boolean(process.env.GROQ_API_KEY);
-}
-
-export function isGeminiConfigured(): boolean {
-  return Boolean(process.env.GEMINI_API_KEY);
 }
